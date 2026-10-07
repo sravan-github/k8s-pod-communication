@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: app-ns
+  labels:
+    app: frontend
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        tier: web
+    spec:
+      containers:
+        - name: frontend
+          image: curlimages/curl:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Starting frontend..."
+              while true; do
+                echo "Calling backend at $BACKEND_URL ..."
+                curl -s "$BACKEND_URL" && echo ""
+                sleep 5
+              done
+          envFrom:
+            - configMapRef:
+                name: frontend-config
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: app-ns
+data:
+  # Short form works within the same namespace
+  BACKEND_URL: "http://backend-service:80"
+
+  # Full FQDN form — use this for cross-namespace connections
+  # BACKEND_URL: "http://backend-service.app-ns.svc.cluster.local:80"
